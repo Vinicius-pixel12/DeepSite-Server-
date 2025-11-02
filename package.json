@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "API backend com Express para integração com Lovable",
   "main": "app.js",
-  "repository": "https://github.com/seu-usuario/seu-repositorio",
-  "author": "Seu Nome",
+  "repository": "https://github.com/Vinicius-pixel12/DeepSite-Server-",
+  "author": "Vini Silva",
   "license": "MIT",
   "private": false,
   "scripts": {
