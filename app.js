@@ -1,40 +1,43 @@
+// app.js
+
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const port = process.env.PORT || 3001;
 
+// Permitir leitura de JSON no body
 app.use(express.json());
 
-// 🔐 Segurança opcional com chave de API
-const API_KEY = process.env.API_KEY || "lovable_2025_secret";
+// 📌 Configuração do CORS
+app.use(cors({
+  origin: 'https://dashproo.com.br/auth', // Substitua pelo domínio do seu SaaS ou Lovable
+  methods: ['GET','POST'],
+  allowedHeaders: ['Content-Type','x-api-key']
+}));
+
+// 📌 Validação da API Key
 app.use((req, res, next) => {
-  const key = req.headers["x-api-key"];
-  if (key !== API_KEY) {
-    return res.status(403).json({ error: "Acesso não autorizado" });
+  const apiKey = req.headers['x-api-key'];
+  if (apiKey !== 'lovable_secret_2025') { // Substitua pela sua chave API
+    return res.status(401).json({ error: 'Acesso não autorizado' });
   }
   next();
 });
 
-// 🔍 Rota principal de teste
-app.get("/", (req, res) => {
-  res.json({ message: "DeepSite API está online!" });
+// 📌 Endpoints de exemplo
+
+// GET simples
+app.get('/api/dados', (req, res) => {
+  res.json({ mensagem: 'API funcionando!' });
 });
 
-// 🧠 Exemplo de rota que o Lovable pode usar
-app.post("/analisar", (req, res) => {
-  const { texto } = req.body;
-
-  if (!texto) {
-    return res.status(400).json({ erro: "Envie o campo 'texto' no corpo da requisição" });
-  }
-
-  // Aqui seria o processamento real do DeepSite
-  const resultado = `Texto recebido e processado com sucesso: ${texto}`;
-
-  res.json({ sucesso: true, resultado });
+// POST de exemplo
+app.post('/api/dados', (req, res) => {
+  const { nome, idade } = req.body;
+  res.json({ mensagem: `Recebido: ${nome}, ${idade} anos` });
 });
 
-// 🚀 Inicialização do servidor
-const server = app.listen(port, () => console.log(`DeepSite rodando na porta ${port}!`));
-
-server.keepAliveTimeout = 120 * 1000;
-server.headersTimeout = 120 * 1000;
+// 📌 Iniciar servidor
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
+});
